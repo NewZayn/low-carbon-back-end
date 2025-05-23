@@ -18,6 +18,6 @@ public class Prevision {
     @ManyToOne
     @JoinColumn(name = "gpu_device_id")
     GpuDevice gpuDevice;
-    String prevision;
+    Float prevision;
     Timestamp createdDate;
 }

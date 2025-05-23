@@ -2,10 +2,8 @@ package lowcarbon.lowcarbonbackend.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.Date;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.validation.annotation.Validated;
+
 
 @AllArgsConstructor
 @NoArgsConstructor

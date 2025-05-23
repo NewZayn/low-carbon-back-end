@@ -3,8 +3,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lowcarbon.lowcarbonbackend.dto.GpuMetricsAccumulatedDTO;
+import lowcarbon.lowcarbonbackend.dto.PrevisionDTO;
+import lowcarbon.lowcarbonbackend.model.GpuDevice;
 import lowcarbon.lowcarbonbackend.model.GpuMetrics;
 import lowcarbon.lowcarbonbackend.model.Prevision;
+import lowcarbon.lowcarbonbackend.repository.GpuDeviceRepository;
 import lowcarbon.lowcarbonbackend.repository.GpuMetricsRepository;
 import lowcarbon.lowcarbonbackend.repository.PrevisionRepository;
 import org.springframework.http.*;
@@ -22,17 +25,17 @@ import java.util.stream.Collectors;
 public class PrevisionService {
     private final GpuMetricsRepository metricsRepository;
     private final PrevisionRepository previsionRepository;
+    private final GpuDeviceRepository gpuDeviceRepository;
     private static final String IA_ENDPOINT = "http://localhost:5000/predict";
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final RestTemplate restTemplate = new RestTemplate();
 
 
-    @Scheduled(fixedRate = 10000)
-    // @Scheduled(cron = "0 0 * * * *")
+    @Scheduled(cron = "0 0 * * * *")
     @Transactional
     public void predictAllGpus() {
         Instant end = Instant.now();
-        Instant start = end.minus(10, ChronoUnit.MINUTES);
+        Instant start = end.minus(1, ChronoUnit.HOURS);
         Timestamp sqlStart = Timestamp.from(start);
         Timestamp sqlEnd = Timestamp.from(end);
         
@@ -59,15 +62,16 @@ public class PrevisionService {
                 headers.setContentType(MediaType.APPLICATION_JSON);
                 HttpEntity<String> req = new HttpEntity<>(jsonBody, headers);
                 System.out.println("Enviando requisição para " + IA_ENDPOINT);
-
-                System.out.println(req.getBody());
-                ResponseEntity<Void> resp = restTemplate.exchange(
+                ResponseEntity<PrevisionDTO> resp = restTemplate.exchange(
                         IA_ENDPOINT,
                         HttpMethod.POST,
                         req,
-                        Void.class
+                        PrevisionDTO.class
                 );
-                resp.getBody();
+                 PrevisionDTO previsionDTO = resp.getBody();
+                 String g = window.getFirst().getGpuDevice().getCode();
+                 GpuDevice gpuDevice = gpuDeviceRepository.findByCode(g).orElseThrow();
+                 addPrevision(new Prevision(null, gpuDevice, previsionDTO.getPrediction(), previsionDTO.getTimestamp()));
                 System.out.println("IA response for gpuId = " + id + " : " + resp.getStatusCode());
             } catch (Exception e) {
                 System.err.println("Erro ao enviar para IA: " + e.getMessage());
@@ -86,6 +90,12 @@ public class PrevisionService {
         dto.setPower(list.stream().map(GpuMetrics::getGpuPowerDraw).collect(Collectors.toList()));
         dto.setTemperature(list.stream().map(GpuMetrics::getGpuTemperature).collect(Collectors.toList()));
         return dto;
+    }
+
+
+    public Prevision addPrevision(Prevision prevision) {
+        previsionRepository.save(prevision);
+        return prevision;
     }
 
     public List<Prevision> getAllPrevisionsByGpuCode(String gpuCode) {
