@@ -10,6 +10,16 @@ As previsões geradas têm como foco exclusivo a métrica de utilização da GPU
 
 ---
 
+Requisitos de execução : 
+
+**Java 21+
+
+Comando para execução : 
+
+```bash
+mvn spring-boot:run
+```
+
 # API Documentation
 
 ## Base URL
