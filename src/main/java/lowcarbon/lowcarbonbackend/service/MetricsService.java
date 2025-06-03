@@ -2,7 +2,7 @@ package lowcarbon.lowcarbonbackend.service;
 import lowcarbon.lowcarbonbackend.dto.GpuMetricsCreation;
 import lowcarbon.lowcarbonbackend.model.GpuDevice;
 import lowcarbon.lowcarbonbackend.model.GpuMetrics;
-import lowcarbon.lowcarbonbackend.model.Prevision;
+import lowcarbon.lowcarbonbackend.model.Prediction;
 import lowcarbon.lowcarbonbackend.repository.GpuDeviceRepository;
 import lowcarbon.lowcarbonbackend.repository.GpuMetricsRepository;
 import lowcarbon.lowcarbonbackend.repository.PrevisionRepository;
@@ -33,9 +33,9 @@ public class MetricsService {
         return gpuMetrics;
     }
 
-    public Prevision prevision(Prevision prevision) {
-        previsionRepository.save(prevision);
-        return prevision;
+    public Prediction prevision(Prediction prediction) {
+        previsionRepository.save(prediction);
+        return prediction;
     }
 
     public GpuMetrics fromGpuCreationDTO(GpuMetricsCreation metrics) {

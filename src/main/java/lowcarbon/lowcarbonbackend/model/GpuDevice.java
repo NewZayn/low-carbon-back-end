@@ -16,6 +16,4 @@ public class GpuDevice {
     private Long id;
     @Column(unique = true, nullable = false)
     private String code;
-
-    //
 }

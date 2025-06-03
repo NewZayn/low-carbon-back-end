@@ -1,6 +1,6 @@
 package lowcarbon.lowcarbonbackend.controller;
 
-import lowcarbon.lowcarbonbackend.model.Prevision;
+import lowcarbon.lowcarbonbackend.model.Prediction;
 import lowcarbon.lowcarbonbackend.service.PrevisionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,23 +20,23 @@ public class PrevisionController {
     }
 
     @GetMapping("/gpu/code/{gpuCode}")
-    public ResponseEntity<List<Prevision>> getPrevisionsByGpuCode(@PathVariable String gpuCode) {
-        List<Prevision> previsions = previsionService.getAllPrevisionsByGpuCode(gpuCode);
-        return ResponseEntity.ok(previsions);
+    public ResponseEntity<List<Prediction>> getPrevisionsByGpuCode(@PathVariable String gpuCode) {
+        List<Prediction> predictions = previsionService.getAllPrevisionsByGpuCode(gpuCode);
+        return ResponseEntity.ok(predictions);
     }
     
     @GetMapping("/gpu/id/{gpuId}")
-    public ResponseEntity<List<Prevision>> getPrevisionsByGpuId(@PathVariable Long gpuId) {
-        List<Prevision> previsions = previsionService.getAllPrevisionsByGpuId(gpuId);
-        return ResponseEntity.ok(previsions);
+    public ResponseEntity<List<Prediction>> getPrevisionsByGpuId(@PathVariable Long gpuId) {
+        List<Prediction> predictions = previsionService.getAllPrevisionsByGpuId(gpuId);
+        return ResponseEntity.ok(predictions);
     }
     
     @GetMapping("/gpu/latest/{gpuCode}")
-    public ResponseEntity<Prevision> getLatestPrevision(@PathVariable String gpuCode) {
-        Prevision latestPrevision = previsionService.getLatestPrevisionByGpuCode(gpuCode);
-        if (latestPrevision == null) {
+    public ResponseEntity<Prediction> getLatestPrevision(@PathVariable String gpuCode) {
+        Prediction latestPrediction = previsionService.getLatestPrevisionByGpuCode(gpuCode);
+        if (latestPrediction == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(latestPrevision);
+        return ResponseEntity.ok(latestPrediction);
     }
 }

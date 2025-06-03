@@ -20,7 +20,7 @@ public class MetricsController {
     public ResponseEntity<GpuMetricsCreation> addMetrics(@RequestBody GpuMetricsCreation metrics) {
         metrics.setTimestamp(new java.sql.Timestamp(System.currentTimeMillis()));
         metricsService.addMetrics(metrics);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(metrics);
     }
 
 }
