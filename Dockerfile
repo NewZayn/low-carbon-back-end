@@ -3,7 +3,7 @@ RUN apt-get update && apt-get install -y openjdk-21-jdk maven
 
 WORKDIR /app
 
-COPY to-do-list/pom.xml .
+COPY /pom.xml .
 
 RUN mvn dependency:go-offline
 
